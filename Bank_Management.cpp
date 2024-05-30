@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
+#include <cstdlib>
 
 class Add {
 private:
@@ -11,7 +12,7 @@ protected:
 	int CVC, SecurityPin;
 	double currentAmount;
 public:
-	Add(): accountNumber(""), CVC(0), SecurityPin(0), currentAmount(2000), addAmount(0) {}
+	Add() : accountNumber(""), CVC(0), currentAmount(rand() % 99999), SecurityPin(0), addAmount(0) {}
 	void Details() {
 		std::cout << "Enter your Account Number: ";
 		std::getline(std::cin, accountNumber);
@@ -126,6 +127,7 @@ void AuthorityMenu(){}
 void JobSeekerMenu(){}
 
 int main() {
+	srand(time(NULL));
 	system("cls");
 	system("COLOR E4");
 	std::cout << "\n\n                                 *********************************************\n";
