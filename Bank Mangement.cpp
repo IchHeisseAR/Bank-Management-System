@@ -27,6 +27,10 @@ public:
 		std::cout << "Enter Amount to add: ";
 		std::cin >> addAmount;
 	}
+	void changeAmount() {
+		std::cout << "Enter new Amount: ";
+		std::cin >> addAmount;
+	}
 	Add(std::string accountNumber, int CVC, int SecurityPin, double Amount, double Current_Amount) {
 		this->accountNumber = accountNumber;
 		this->CVC = CVC;
@@ -135,7 +139,7 @@ int main(){
 	std::cout << "                                 *********************************************\n";
 
 	int choice, userChoice, authChoice, jobChoice;
-	char tryAgain='y', receipt;
+	char tryAgain='y', receipt, choiceNew;
 	do {
 		Types();
 		std::cin >> choice;
@@ -153,6 +157,8 @@ int main(){
 				if (receipt == 'y' || receipt == 'Y') {
 					addMoney.ReceiptAdd();
 				}
+				std::cout << "Would you like to change the amount added: ";
+				std::cin >> choiceNew;
 			}
 		}
 
