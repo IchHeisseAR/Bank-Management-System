@@ -6,13 +6,13 @@
 
 class Add {
 private:
-	double addAmount;
+	double addAmount, totalAdd;
 protected:
 	std::string accountNumber;
 	int CVC, SecurityPin;
 	double currentAmount;
 public:
-	Add() : accountNumber(""), CVC(0), currentAmount(rand() % 99999), SecurityPin(0), addAmount(0) {}
+	Add() : accountNumber(""), CVC(0), currentAmount(rand() % 999999), SecurityPin(0), addAmount(0), totalAdd(0) {}
 	void Details() {
 		std::cout << "Enter your Account Number: ";
 		std::getline(std::cin, accountNumber);
@@ -25,6 +25,8 @@ public:
 		std::cout << "Enter Amount to add: ";
 		std::cin >> addAmount;
 		currentAmount += addAmount;
+		totalAdd += addAmount;
+
 	}
 	Add(std::string accountNumber, int CVC, int SecurityPin, double Amount, double Current_Amount) {
 		this->accountNumber = accountNumber;
@@ -36,7 +38,7 @@ public:
 	std::string getAccountNumber() { return accountNumber; }
 	int getCVC() { return CVC; }
 	int getSecurityPin() { return SecurityPin; }
-	double getAmount() { return addAmount; }
+	double getAmount() { return totalAdd; }
 	double getCurrentAmount() { return currentAmount; }
 	double getAddedAmount() { return currentAmount += addAmount; }
 	void ReceiptAdd() { 
@@ -49,9 +51,9 @@ public:
 
 class Withdraw : protected Add {
 private:
-	double withdrawalAmount;
+	double withdrawalAmount, totalWithdraw;
 public:
-	Withdraw() : withdrawalAmount(0) { Details(); }
+	Withdraw() : withdrawalAmount(0), totalWithdraw(0) { Details(); }
 	void setWithdrawAmount() {
 		std::cout << "Enter Amount to Withdraw (Current Amount is " << currentAmount << "): ";
 		std::cin >> withdrawalAmount;
@@ -60,9 +62,10 @@ public:
 			std::cin >> withdrawalAmount;
 		}
 		currentAmount -= withdrawalAmount;
+		totalWithdraw += withdrawalAmount;
 	}
 	Withdraw(double withdrawalAmount) { this->withdrawalAmount = withdrawalAmount; }
-	double getWithdraw() { return withdrawalAmount; }
+	double getWithdraw() { return totalWithdraw; }
 	double getWithdrawnAmount() { return currentAmount; }
 	void ReceiptWithdraw() {
 		std::cout << "\*********************************************************************\n\n";
@@ -88,7 +91,7 @@ public:
 	std::string getDuration() { return duration; }
 	void displayLoan() {
 		std::cout << "\*********************************************************************\n\n";
-		std::cout << "          ~Here is your Loan Receipt~\n\n" << "          Loan Amount by you : " << getLoanAmount() << std::endl << "          Chosen Duration : " << getDuration() << std::endl << std::endl;
+		std::cout << "          ~Loan Info~\n\n" << "          Loan Amount by you : " << getLoanAmount() << std::endl << "          Chosen Duration : " << getDuration() << std::endl << std::endl;
 		std::cout << "\*********************************************************************\n";
 	}
 	~Loan(){}
@@ -96,13 +99,19 @@ public:
 
 class CustomerCare {
 private:
-	int query, choice;
+	int choice, query, pin;
 public:
-	CustomerCare(): query(0), choice(0) {
+	CustomerCare(): choice(0), query(0), pin(0) {
 		std::cout << "1. For Queries relating to any problem.\n";
 		std::cout << "2. For Opening a bank Account.\n";
 		std::cout << "3. For Closing existing bank account\n";
 		std::cout << "Enter your Choice: ";
+		std::cin >> choice;
+	}
+	void Query() {}
+	void OpenBank() {
+		std::cout << "Setting up things for you...\n";
+		std::cout << "You're opening bank account for:\n";
 	}
 	~CustomerCare(){}
 };
@@ -182,8 +191,10 @@ int main() {
 				getLoan.displayLoan();
 				break;
 			}
-			case 4: {}
+			case 4: {
+				CustomerCare care;
 
+			}
 			default:
 				std::cout << "\nINVALID INPUT!";
 			}
