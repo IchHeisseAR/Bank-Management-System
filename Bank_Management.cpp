@@ -26,10 +26,6 @@ public:
 		std::cin >> addAmount;
 		currentAmount += addAmount;
 	}
-	void changeAmount() {
-		std::cout << "Enter new Amount: ";
-		std::cin >> addAmount;
-	}
 	Add(std::string accountNumber, int CVC, int SecurityPin, double Amount, double Current_Amount) {
 		this->accountNumber = accountNumber;
 		this->CVC = CVC;
