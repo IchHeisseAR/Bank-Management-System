@@ -44,7 +44,7 @@ public:
 	double getAddedAmount() { return currentAmount += addAmount; }
 	virtual void Receipt() {
 		std::cout << "\n*********************************************************************\n";
-		std::cout << "\n          ~Here is your Receipt~ \n\n" << "          Account Number: " << getAccountNumber() << std::endl << "          Amount Added: " << getAmount() << std::endl << "          Your current Amount is now: " << getCurrentAmount() << std::endl;
+		std::cout << "\n          ~Here is your Receipt~ \n\n" << "          Account Number: " << getAccountNumber() << std::endl << "          Amount Added: " << std::setprecision(2) << getAmount() << std::endl << "          Your current Amount is now: " << getCurrentAmount() << std::endl;
 		std::cout << "\n*********************************************************************\n";
 	}
 	~Add() {}
@@ -69,8 +69,8 @@ public:
 	double getWithdraw() { return totalWithdraw; }
 	double getWithdrawnAmount() { return currentAmount; }
 	void Receipt() {
-		std::cout << "\*********************************************************************\n";
-		std::cout << "          ~Here is your Receipt~ \n\n" << "          Account Number: " << getAccountNumber() << std::endl << "          Amount Withdrawn: " << getWithdraw() << std::endl << "          Your current amount is now: " << getWithdrawnAmount() << std::endl;
+		std::cout << "\n*********************************************************************\n";
+		std::cout << "          ~Here is your Receipt~ \n\n" << "          Account Number: " << getAccountNumber() << std::endl << "          Amount Withdrawn: " << std::setprecision(2) << getWithdraw() << std::endl << "          Your current amount is now: " << getWithdrawnAmount() << std::endl;
 		std::cout << "\n*********************************************************************\n";
 	}
 	~Withdraw() {}
@@ -91,9 +91,9 @@ public:
 	double getLoanAmount() { return loanAmount; }
 	std::string getDuration() { return duration; }
 	void displayLoan() {
-		std::cout << "\*********************************************************************\n\n";
+		std::cout << "\n*********************************************************************\n\n";
 		std::cout << "          ~Loan Info~\n\n" << "          Loan Amount by you : " << getLoanAmount() << std::endl << "          Chosen Duration : " << getDuration() << std::endl << std::endl;
-		std::cout << "\*********************************************************************\n";
+		std::cout << "\n*********************************************************************\n";
 	}
 	~Loan() {}
 };
@@ -105,7 +105,7 @@ private:
 	std::string password, name, CNIC, DOB, Email, phNo, Address, City, State;
 public:
 	CustomerCare() : choice(0), query(0), type(0), initialDeposit(0), name(""), CNIC(""), accNumber(0), DOB(""), Email(""), phNo(""), password(""), ZIP(0), Address(""), City(""), State("") {
-		std::cout << "1. For Queries relating to any problem.\n";
+		std::cout << "\n1. For Queries relating to any problem.\n";
 		std::cout << "2. For Opening a bank Account.\n";
 		std::cout << "3. For Closing existing bank account\n";
 		std::cout << "Enter your Choice: ";
@@ -118,20 +118,30 @@ public:
 			displayOpen();
 			break;
 		case 3:
+			std::cin.ignore();
+			closeBank();
 			break;
 		default:
 			std::cout << "\nInvalid Choice.\n";
-			break;
+			CustomerCare();
 		}
 	}
-	void Query() {}
-	void OpenBank() {
-		std::cout << "Setting up things for you...\n";
-		std::cout << "Select Type:\n1. Saving\n2. Joint\n3. Business\nEnter your Choice: ";
-		std::cin >> type;
-		std::cin.ignore();
-		std::cout << "Enter Name: ";
-		std::getline(std::cin, name);
+	void Query() {
+		std::cout << "\nState your Query Type\n1. Technical Issue\n2. Issue Related to Account\n3. Other sort of Assistance\nChoice: ";
+		std::cin >> choice;
+		switch (choice) {
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		default:
+			std::cout << "\nInvalid Input!\n";
+			Query();
+		}
+	}
+	void bankDetails() {
 		std::cout << "Enter CNIC: ";
 		std::getline(std::cin, CNIC);
 		std::cout << "Enter Date of Birth: ";
@@ -148,6 +158,16 @@ public:
 		std::getline(std::cin, Address);
 		std::cout << "Enter ZIP Code: ";
 		std::cin >> ZIP;
+		accNumber = rand() % INT_MAX;
+	}
+	void OpenBank() {
+		std::cout << "Setting up things for you...\n";
+		std::cout << "\nSelect Type:\n1. Saving\n2. Joint\n3. Business\nEnter your Choice: ";
+		std::cin >> type;
+		std::cin.ignore();
+		std::cout << "\nEnter Name: ";
+		std::getline(std::cin, name);
+		bankDetails();
 		std::cin.ignore();
 		std::cout << "Please set up a Password: ";
 		std::getline(std::cin, password);
@@ -158,10 +178,12 @@ public:
 		} while (initialDeposit < 0);
 		if (initialDeposit == 0) { std::cout << "Your Account is NOT activated as the initial deposit is $0.\nActivate your Account to get your Credit Card.\n"; }
 		else { std::cout << "Thank you for Opening your Bank Account.\nHere is your Credit Card Good Sir!\n"; }
-		accNumber = rand() % INT_MAX;
 	}
 	void closeBank() {
-
+		std::cout << "\nYour Closing application is under process, Please wait...\nFor further verification, enter your current password: ";
+		std::getline(std::cin, password);
+		bankDetails();
+		std::cout << "\nThe Bank Account " << getAccountNumber() << " has been Successfully closed.\nYou had $" << rand() % 999 << " saved.\n";
 	}
 	inline int getChoice() { return choice; }
 	int getQuery() { return query; }
@@ -178,7 +200,7 @@ public:
 	std::string getCity() { return City; }
 	std::string getState() { return State; }
 	std::string getAddress() { return Address; }
-	void displayOpen() { std::cout << "Name: " << getName() << "\nCNIC: " << getCNIC() << "\nDate of Birth : " << getDateOfBirth() << "\nCity: " << getCity() << "\nState: " << getState() << "\nCurrent Amount: " << getDeposit(); }
+	void displayOpen() { std::cout << "\nName: " << getName() << "\nCNIC: " << getCNIC() << "\nDate of Birth : " << getDateOfBirth() << "\nCity: " << getCity() << "\nState: " << getState() << "\nCurrent Amount: " << getDeposit(); }
 	~CustomerCare() {}
 };
 
@@ -191,15 +213,15 @@ void Types() {
 	std::cout << "Enter Your Choice: ";
 }
 void userMenu() {
-	std::cout << "\n\nPress\n";
+	std::cout << "\nPress\n";
 	std::string Menu[4] = { "1. To Add Money.\n","2. To Withdraw Money.\n","3. For Loan\n","4. For Customer Service.\n" };
 	for (int i = 0; i < 4; i++) {
 		std::cout << Menu[i];
 	}
 	std::cout << "Enter Your Choice: ";
 }
-void AuthorityMenu() {}
-void JobSeekerMenu() {}
+class Authority{};
+class JobSeeker {};
 
 int main() {
 	system("cls");
@@ -212,70 +234,70 @@ int main() {
 
 	int choice, userChoice, authChoice, jobChoice;
 	char tryAgain = 'y', receipt, choiceNew;
-	do {
-		srand(time(NULL));
-		Types();
-		std::cin >> choice;
-		system("COLOR 79");
-		switch (choice) {
-		case 1:
-			userMenu();
-			std::cin >> userChoice;
-			system("Color B0");
-			switch (userChoice) {
-			case 1: {
-				std::cin.ignore();
-				Add addMoney;
-				addMoney.Details();
-				do {
-					addMoney.setAddAmount();
-					std::cout << "Add more money(y/Y): ";
-					std::cin >> choiceNew;
-				} while (choiceNew == 'y' || choiceNew == 'Y');
-				std::cout << "Would you like a receipt? (y/Y): ";
-				std::cin >> receipt;
-				if (receipt == 'y' || receipt == 'Y') { addMoney.Receipt(); }
-				break;
-			}
-			case 2: {
-				std::cin.ignore();
-				Withdraw withdrawMoney;
-				do {
-					withdrawMoney.setWithdrawAmount();
-					std::cout << "Withdraw more money?(y/Y): ";
-					std::cin >> choiceNew;
-				} while (choiceNew == 'y' || choiceNew == 'Y');
-				std::cout << "Would you like a receipt? (y/Y): ";
-				std::cin >> receipt;
-				if (receipt == 'y' || receipt == 'Y') {
-					withdrawMoney.Receipt();
-				}
-				break;
-			}
-			case 3: {
-				Loan getLoan;
-				getLoan.displayLoan();
-				break;
-			}
-			case 4: {
-				CustomerCare care;
-				break;
-			}
-			default:
-				std::cout << "\nINVALID INPUT!";
-				break;
+	srand(time(NULL));
+	Types();
+	std::cin >> choice;
+	system("COLOR 79");
+	switch (choice) {
+	case 1:
+		userMenu();
+		std::cin >> userChoice;
+		system("Color B0");
+		switch (userChoice) {
+		case 1: {
+			std::cin.ignore();
+			Add addMoney;
+			addMoney.Details();
+			do {
+				addMoney.setAddAmount();
+				std::cout << "Add more money(y/Y): ";
+				std::cin >> choiceNew;
+			} while (choiceNew == 'y' || choiceNew == 'Y');
+			std::cout << "Would you like a receipt? (y/Y): ";
+			std::cin >> receipt;
+			if (receipt == 'y' || receipt == 'Y') { addMoney.Receipt(); }
+			break;
+		}
+		case 2: {
+			std::cin.ignore();
+			Withdraw withdrawMoney;
+			do {
+				withdrawMoney.setWithdrawAmount();
+				std::cout << "Withdraw more money?(y/Y): ";
+				std::cin >> choiceNew;
+			} while (choiceNew == 'y' || choiceNew == 'Y');
+			std::cout << "Would you like a receipt? (y/Y): ";
+			std::cin >> receipt;
+			if (receipt == 'y' || receipt == 'Y') {
+				withdrawMoney.Receipt();
 			}
 			break;
-		case 2:
+		}
+		case 3: {
+			Loan getLoan;
+			getLoan.displayLoan();
 			break;
-		case 3:
+		}
+		case 4: {
+			CustomerCare care;
 			break;
+		}
 		default:
 			std::cout << "\nINVALID INPUT!";
+			main();
 		}
-		std::cout << "\nApply for Job, Add/Withdraw money, Authorized?(y/Y): ";
-		std::cin >> tryAgain;
-	} while (tryAgain == 'y' || tryAgain == 'Y');
-
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	default:
+		std::cout << "\nINVALID INPUT!";
+		main();
+	}
+	std::cout << "\nApply for Job, Add/Withdraw money, Authorized?(y/Y): ";
+	std::cin >> tryAgain;
+	if (tryAgain == 'y' || tryAgain == 'Y') { main(); }
+	std::cout << "\nThanks for preferring our bank service, have a NICE day!\n";
 	return 0;
 }
