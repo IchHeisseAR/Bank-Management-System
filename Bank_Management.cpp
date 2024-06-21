@@ -100,46 +100,102 @@ public:
 
 class CustomerCare {
 private:
-	int choice, query, type, accNumber, ZIP;
+	int choice, type, accNumber, ZIP;
+	char queryAgain;
 	double initialDeposit;
 	std::string password, name, CNIC, DOB, Email, phNo, Address, City, State;
 public:
-	CustomerCare() : choice(0), query(0), type(0), initialDeposit(0), name(""), CNIC(""), accNumber(0), DOB(""), Email(""), phNo(""), password(""), ZIP(0), Address(""), City(""), State("") {
-		std::cout << "\n1. For Queries relating to any problem.\n";
-		std::cout << "2. For Opening a bank Account.\n";
-		std::cout << "3. For Closing existing bank account\n";
-		std::cout << "Enter your Choice: ";
-		std::cin >> choice;
-		switch (getChoice()) {
-		case 1:
-			break;
-		case 2:
-			OpenBank();
-			displayOpen();
-			break;
-		case 3:
-			std::cin.ignore();
-			closeBank();
-			break;
-		default:
-			std::cout << "\nInvalid Choice.\n";
-			CustomerCare();
-		}
+	CustomerCare() : choice(0), queryAgain(NULL), type(0), initialDeposit(0), name(""), CNIC(""), accNumber(0), DOB(""), Email(""), phNo(""), password(""), ZIP(0), Address(""), City(""), State("") {
+		do {
+			std::cout << "\n1. For Queries relating to any problem.\n";
+			std::cout << "2. For Opening a bank Account.\n";
+			std::cout << "3. For Closing existing bank account\n";
+			std::cout << "Enter your Choice: ";
+			std::cin >> choice;
+			switch (getChoice()) {
+			case 1:
+				Query();
+				break;
+			case 2:
+				OpenBank();
+				displayOpen();
+				break;
+			case 3:
+				std::cin.ignore();
+				closeBank();
+				break;
+			default:
+				std::cout << "\nInvalid Choice.\n";
+			}
+		} while (choice > 3 || choice < 1);
 	}
 	void Query() {
-		std::cout << "\nState your Query Type\n1. Technical Issue\n2. Issue Related to Account\n3. Other sort of Assistance\nChoice: ";
+		std::cout << "\nState your Query Type\n1. Technical Issue\n2. Issue Related to Account\n3. Other sort of Assistance.\nChoice: ";
 		std::cin >> choice;
+		std::cout << std::endl;
 		switch (choice) {
 		case 1:
+			std::cout << "\n1. Why aren't online services working right now?\n2. What happened to the ATM?\n3. Vending Machine got my money stuck in it\nPick your Problem: ";
+			std::cin >> choice;
+			switch (choice) {
+			case 1:
+				std::cout << "Our IT team is working on it right now, Thank you for your patience.\nWe will have it fixed shortly!";
+				break;
+			case 2:
+				std::cout << "Due to heavy storms, our ATM machine can't synchronize with your Data.\nThank you for your empathy!";
+				break;
+			case 3:
+				std::cout << "Mr. Davidson here will help you with your problem!\nHere are the $" << rand() % 30 << " you had inserted!";
+				break;
+			default:
+				std::cout << "\nInvalid Input.\n";
+				Query();
+			}
 			break;
 		case 2:
+			std::cout << "\n1. How do I close my Account?\n2. What are the requirements to open a new Account?\n3. How to Activate my bank account?\nChoice: ";
+			std::cin >> choice;
+			switch (choice) {
+			case 1:
+				std::cout << "Here are the few steps, the process could even take days to finish.\nFirst, Write a closure statement to the bank.\nSecond, We will take further verification steps to permanently wipe your bank account from existence.\nThe process will then persist and your bank account will close.";
+				break;
+			case 2:
+				std::cout << "You'll need your CNIC, Driving Licence (optional), Domicile and some other documents depending on the type of account you want to open.";
+				break;
+			case 3:
+				std::cout << "You need to make an initial deposit of atleast 1 Dollar to activate your bank account. Then you are ready to make transactions freely!";
+				break;
+			default:
+				std::cout << "\nInvalid Input.\n";
+				Query();
+			}
 			break;
 		case 3:
+			std::cout << "1. How do I apply for Job?\n2. Who is the Manager here? I wish to talk to him.\nWhat are the Opening and closing timings of the bank.\nChoice: ";
+			std::cin >> choice;
+			switch (choice) {
+			case 1:
+				std::cout << "You'll need some skills depending on the post you want the job on, furthermore you must have atleast Matric Qualification.";
+				break;
+			case 2:
+				std::cout << "Mr. J.Robert Falcone is the Manager. You'll need an appointment to see him however.";
+				break;
+			case 3:
+				std::cout << "Our Bank stays open Monday - Saturday from 9 AM through 5 PM.\nATM however, stays open 24/7!";
+				break;
+			default:
+				std::cout << "\nInvalid Input.\n";
+				Query();
+			}
 			break;
 		default:
 			std::cout << "\nInvalid Input!\n";
 			Query();
 		}
+		std::cout << '\n';
+		std::cout << "\nNeed more assistance? (y/Y): ";
+		std::cin >> queryAgain;
+		if (queryAgain == 'y' || queryAgain == 'Y') { Query(); }
 	}
 	void bankDetails() {
 		std::cout << "Enter CNIC: ";
@@ -186,7 +242,7 @@ public:
 		std::cout << "\nThe Bank Account " << getAccountNumber() << " has been Successfully closed.\nYou had $" << rand() % 999 << " saved.\n";
 	}
 	inline int getChoice() { return choice; }
-	int getQuery() { return query; }
+	int getQuery() { return queryAgain; }
 	int getType() { return type; }
 	int getAccountNumber() { return accNumber; }
 	int getZIP() { return ZIP; }
@@ -237,12 +293,10 @@ int main() {
 	srand(time(NULL));
 	Types();
 	std::cin >> choice;
-	system("COLOR 79");
 	switch (choice) {
 	case 1:
 		userMenu();
 		std::cin >> userChoice;
-		system("Color B0");
 		switch (userChoice) {
 		case 1: {
 			std::cin.ignore();
