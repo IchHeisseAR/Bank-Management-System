@@ -11,9 +11,9 @@ private:
 protected:
 	std::string accountNumber;
 	int CVC, SecurityPin;
-	double currentAmount;
+	static long float currentAmount;
 public:
-	Add() : accountNumber(""), CVC(0), currentAmount(rand() % 999999), SecurityPin(0), addAmount(0), totalAdd(0) {}
+	Add() : accountNumber(""), CVC(0), SecurityPin(0), addAmount(0), totalAdd(0) {}
 	void Details() {
 		std::cout << "Enter your Account Number: ";
 		std::getline(std::cin, accountNumber);
@@ -49,7 +49,7 @@ public:
 	}
 	~Add() {}
 };
-
+long float Add:: currentAmount = rand() % 99999;
 class Withdraw : protected Add {
 private:
 	double withdrawalAmount, totalWithdraw;
@@ -98,7 +98,7 @@ public:
 	~Loan() {}
 };
 
-class CustomerCare {
+class CustomerCare: protected Add {
 private:
 	int choice, type, accNumber, ZIP;
 	char queryAgain;
@@ -160,7 +160,7 @@ public:
 				std::cout << "Here are the few steps, the process could even take days to finish.\nFirst, Write a closure statement to the bank.\nSecond, We will take further verification steps to permanently wipe your bank account from existence.\nThe process will then persist and your bank account will close.";
 				break;
 			case 2:
-				std::cout << "You'll need your CNIC, Driving Licence (optional), Domicile and some other documents depending on the type of account you want to open.";
+				std::cout << "You'll need your CNIC, Driving License (optional), Domicile and some other documents depending on the type of account you want to open.";
 				break;
 			case 3:
 				std::cout << "You need to make an initial deposit of atleast 1 Dollar to activate your bank account. Then you are ready to make transactions freely!";
@@ -232,6 +232,7 @@ public:
 			std::cin >> initialDeposit;
 			if (initialDeposit < 0) { std::cout << "\nEnter a valid Amount: \n"; }
 		} while (initialDeposit < 0);
+		currentAmount = initialDeposit;
 		if (initialDeposit == 0) { std::cout << "Your Account is NOT activated as the initial deposit is $0.\nActivate your Account to get your Credit Card.\n"; }
 		else { std::cout << "Thank you for Opening your Bank Account.\nHere is your Credit Card Good Sir!\n"; }
 	}
@@ -277,7 +278,67 @@ void userMenu() {
 	std::cout << "Enter Your Choice: ";
 }
 class Authority{};
-class JobSeeker {};
+class JobSeeker {
+	int skill, qualification;
+public:
+	JobSeeker() :skill(0), qualification(0) {
+		std::cout << "\nSelect your Qualification.\n1. Graduate\n2. F.Sc\n3. Matric\n4. Diploma\n5. None\nEnter your Choice: ";
+		std::cin >> qualification;
+		eligibility();
+	}
+	void eligibility() {
+		switch (qualification) {
+		case 1:
+			std::cout << "Select your Degree type\n1. Bachelors\n2. Masters\nEnter your choice: ";
+			std::cin >> qualification;
+			switch (qualification) {
+			case 1:
+				std::cout << "Enter your degree\n1. ";
+				std::cin >> qualification;
+				break;
+			case 2:
+				std::cout << "Enter your Degree\n1. ";
+				std::cin >> qualification;
+				break;
+			default:
+				std::cout << "\nInvalid Input!\n";
+				eligibility();
+			}
+			break;
+		case 2:
+			std::cout << "Enter your Qualification\n1. Pre Engineering\n2. ICS (Computer)\n3. ICS (Stats)\n4. None\nEnter your Choice: ";
+			std::cin >> qualification;
+			switch (qualification) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				std::cout << "\nYou're Ineligible\n";
+				break; 
+			default:
+				std::cout << "\nInvalid Input!\n";
+				eligibility();
+			}
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			std::cout << "\nI'm afraid you're not eligible to apply for job at our bank.\n";
+			break;
+		default:
+			std::cout << "\nInvalid input.\n";
+			eligibility();
+		}
+	}
+	int getQualification() { return qualification; }
+	int getSkill() { return skill; }
+	~JobSeeker(){}
+};
 
 int main() {
 	system("cls");
