@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <climits>
+#include <vector>
 
 class Add {
 private:
@@ -277,7 +278,12 @@ void userMenu() {
 	}
 	std::cout << "Enter Your Choice: ";
 }
-class Authority{};
+class Authority{
+	std::vector <std::string> firstName = {};
+	std::vector <std::string> lastName = {};
+public:
+
+};
 class JobSeeker {
 	int skill, qualification;
 public:
