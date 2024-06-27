@@ -50,7 +50,7 @@ public:
 	}
 	~Add() {}
 };
-long float Add:: currentAmount = rand() % 99999;
+long float Add :: currentAmount = rand() % 99999;
 class Withdraw : protected Add {
 private:
 	double withdrawalAmount, totalWithdraw;
@@ -278,12 +278,32 @@ void userMenu() {
 	}
 	std::cout << "Enter Your Choice: ";
 }
-class Authority{
-	std::vector <std::string> firstName = {};
-	std::vector <std::string> lastName = {};
+class Authority {
+	int f, l, choice;
+	static int i;
+	std::string fname, lname;
+	std::vector <std::string> firstName = { "Umer","Abdullah","Muneeb","Ayesha","Zeeshan","Moiz","Zain","Khateeja","Tariq","Daniyal" };
+	std::vector <std::string> lastName = { "Javaid","Ahmad","Ijaz","Imtiaz","Khalil","-ul- Hassan","-ul- Arfeen","Yousaf","-ur- Rahman", "bin Abdur Rahman" };
+	std::vector <std::string> employeeType = { "Accountant","Janitor", "Security Guard", "Receptionist", "IT Engineer"};
 public:
+	Authority():f(0),l(0),choice(0),fname(""),lname(""){
+		std::cout << "State your Type: \n1. HR\n2. Boss\3. Janitor\n4. Accountant\n5. Manager\nEnter your Choice: ";
+		std::cin >> choice;
+	}
+	void manageEmployees(){
+		std::cout << "\nYou have " << i << " employees working in your bank at the moment: \n";
+		for(int j = 0;j<i;j++){ std::cout << j + 1 << ". " << firstName[rand() % firstName.size()] << " " << lastName[rand() % lastName.size()]<<" ("<<employeeType[rand()%employeeType.size()]<<") " << std::endl; }
+		std::cout << "\n1. Fire\n2. Hire\nEnter your Choice: ";
+		std::cin >> choice;
+		switch (choice) {
+		case 1:
+			std::cout << "Enter Employee Number from the Given List: ";
+			std::cin >> choice;
 
+		}
+	}
 };
+int Authority::i = rand() % 100;
 class JobSeeker {
 	int skill, qualification;
 public:
@@ -408,8 +428,11 @@ int main() {
 			main();
 		}
 		break;
-	case 2:
+	case 2: {
+		Authority auth;
+		auth.manageEmployees();
 		break;
+	}
 	case 3:
 		break;
 	default:
