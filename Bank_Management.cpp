@@ -1,9 +1,11 @@
+
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <iomanip>
 #include <cstdlib>
 #include <climits>
+#include <vector>
 
 class Add {
 private:
@@ -11,9 +13,9 @@ private:
 protected:
 	std::string accountNumber;
 	int CVC, SecurityPin;
-	double currentAmount;
+	static long float currentAmount;
 public:
-	Add() : accountNumber(""), CVC(0), currentAmount(rand() % 999999), SecurityPin(0), addAmount(0), totalAdd(0) {}
+	Add() : accountNumber(""), CVC(0), SecurityPin(0), addAmount(0), totalAdd(0) {}
 	void Details() {
 		std::cout << "Enter your Account Number: ";
 		std::getline(std::cin, accountNumber);
@@ -49,7 +51,7 @@ public:
 	}
 	~Add() {}
 };
-
+long float Add::currentAmount = rand() % 99999;
 class Withdraw : protected Add {
 private:
 	double withdrawalAmount, totalWithdraw;
@@ -92,20 +94,20 @@ public:
 	std::string getDuration() { return duration; }
 	void displayLoan() {
 		std::cout << "\n*********************************************************************\n\n";
-		std::cout << "          ~Loan Info~\n\n" << "          Loan Amount by you: " << getLoanAmount() << std::endl << "          Chosen Duration: " << getDuration() << std::endl << std::endl;
+		std::cout << "          ~Loan Info~\n\n" << "          Loan Amount by you : " << getLoanAmount() << std::endl << "          Chosen Duration : " << getDuration() << std::endl << std::endl;
 		std::cout << "\n*********************************************************************\n";
 	}
 	~Loan() {}
 };
 
-class CustomerCare {
+class CustomerCare : protected Add {
 private:
-	int choice, type, accNumber, ZIP, draft;
+	int choice, type, accNumber, ZIP;
 	char queryAgain;
 	double initialDeposit;
-	std::string password, name, CNIC, DOB, Email, phNo, Address, City, State, cnic_2;
+	std::string password, name, CNIC, DOB, Email, phNo, Address, City, State;
 public:
-	CustomerCare() : choice(0), queryAgain(NULL), type(0), draft(0), initialDeposit(0), name(""), CNIC(""), accNumber(0), DOB(""), Email(""), phNo(""), password(""), ZIP(0), Address(""), City(""), State(""), cnic_2("") {
+	CustomerCare() : choice(0), queryAgain(NULL), type(0), initialDeposit(0), name(""), CNIC(""), accNumber(0), DOB(""), Email(""), phNo(""), password(""), ZIP(0), Address(""), City(""), State("") {
 		do {
 			std::cout << "\n1. For Queries relating to any problem.\n";
 			std::cout << "2. For Opening a bank Account.\n";
@@ -160,7 +162,7 @@ public:
 				std::cout << "Here are the few steps, the process could even take days to finish.\nFirst, Write a closure statement to the bank.\nSecond, We will take further verification steps to permanently wipe your bank account from existence.\nThe process will then persist and your bank account will close.";
 				break;
 			case 2:
-				std::cout << "You'll need your CNIC, Driving Licence (optional), Domicile and some other documents depending on the type of account you want to open.";
+				std::cout << "You'll need your CNIC, Driving License (optional), Domicile and some other documents depending on the type of account you want to open.";
 				break;
 			case 3:
 				std::cout << "You need to make an initial deposit of atleast 1 Dollar to activate your bank account. Then you are ready to make transactions freely!";
@@ -218,20 +220,12 @@ public:
 	}
 	void OpenBank() {
 		std::cout << "Setting up things for you...\n";
-		std::cout << "\nSelect Type:\n1. Current\n2. Joint\n3. Business\nEnter your Choice: ";
+		std::cout << "\nSelect Type:\n1. Saving\n2. Joint\n3. Business\nEnter your Choice: ";
 		std::cin >> type;
 		std::cin.ignore();
 		std::cout << "\nEnter Name: ";
 		std::getline(std::cin, name);
 		bankDetails();
-		if (type == 2) {
-			std::cout << "Enter Partner's CNIC: ";
-			std::getline(std::cin, cnic_2);
-		}
-		if (type == 3) {
-			std::cout << "Enter Business Draft No: ";
-			std::cin >> draft;
-		}
 		std::cin.ignore();
 		std::cout << "Please set up a Password: ";
 		std::getline(std::cin, password);
@@ -240,14 +234,11 @@ public:
 			std::cin >> initialDeposit;
 			if (initialDeposit < 0) { std::cout << "\nEnter a valid Amount: \n"; }
 		} while (initialDeposit < 0);
-		
+		currentAmount = initialDeposit;
 		if (initialDeposit == 0) { std::cout << "Your Account is NOT activated as the initial deposit is $0.\nActivate your Account to get your Credit Card.\n"; }
 		else { std::cout << "Thank you for Opening your Bank Account.\nHere is your Credit Card Good Sir!\n"; }
 	}
 	void closeBank() {
-		std::cout << "Enter your Account Number: ";
-		std::cin >> accNumber;
-		std::cin.ignore();
 		std::cout << "\nYour Closing application is under process, Please wait...\nFor further verification, enter your current password: ";
 		std::getline(std::cin, password);
 		bankDetails();
@@ -258,12 +249,10 @@ public:
 	int getType() { return type; }
 	int getAccountNumber() { return accNumber; }
 	int getZIP() { return ZIP; }
-	int getDraft() { return draft; }
 	double getDeposit() { return initialDeposit; }
 	std::string getName() { return name; }
 	std::string getPassword() { return password; }
 	std::string getCNIC() { return CNIC; }
-	std::string getPartnerCnic() { return cnic_2; }
 	std::string getDateOfBirth() { return DOB; }
 	std::string getEmail() { return Email; }
 	std::string getPhone() { return phNo; }
@@ -290,10 +279,135 @@ void userMenu() {
 	}
 	std::cout << "Enter Your Choice: ";
 }
-class Authority{};
-class jobSeeker {
+class Authority {
+	int f, l, choice;
+	char given;
+	static int i;
+	std::string fname, lname, etype;
+	std::vector <std::string> firstName = { "Umer","Abdullah","Muneeb","Ayesha","Zeeshan","Moiz","Zain","Khateeja","Tariq","Daniyal" };
+	std::vector <std::string> lastName = { "Javaid","Ahmad","Ijaz","Imtiaz","Khalil","-ul- Hassan","-ul- Arfeen","Yousaf","-ur- Rahman", "bin Abdur Rahman" };
+	std::vector <std::string> employeeType = { "Accountant","Janitor", "Security Guard", "Receptionist", "IT Engineer" };
 public:
-	jobSeeker() {}
+	Authority() :f(0), l(0), choice(0), fname(""), lname("") {
+		std::cout << "State your Type: \n1. HR\n2. Boss\3. Janitor\n4. Accountant\n5. Manager\nEnter your Choice: ";
+		std::cin >> choice;
+	}
+	void manageEmployees() {
+		std::cout << "\nYou have " << i << " employees working in your bank at the moment: \n";
+		for (int j = 0; j < i; j++) { std::cout << j + 1 << ". " << firstName[rand() % firstName.size()] << " " << lastName[rand() % lastName.size()] << " (" << employeeType[rand() % employeeType.size()] << ") " << std::endl; }
+		if (firstName.size() > 10) { std::cout << fname << " " << lname << std::endl; }
+		std::cout << "\n1. Fire\n2. Hire\nEnter your Choice: ";
+		std::cin >> choice;
+		switch (choice) {
+		case 1:
+			std::cout << "Enter Employee Number from the Given List: ";
+			std::cin >> choice;
+			if (choice >= 0 && choice <= i) {
+			}
+			else { std::cout << "\nInvalid Choice!\n"; }
+			break;
+		case 2:
+			std::cout << "Enter First name of the new Employee: ";
+			std::cin.ignore();
+			std::getline(std::cin,fname);
+			std::cout << "Enter Last Name: ";
+			std::getline(std::cin, lname);
+			firstName.push_back(fname);
+			lastName.push_back(lname);
+			for (int j = 0; j < employeeType.size(); j++) { std::cout << j + 1 << ". " << employeeType[j] << std::endl; }
+			std::cout << "\nIs he from the one of the given types?(y/Y): ";
+			std::cin >> given;
+			switch (given) {
+			case 'y':
+			case 'Y':
+				std::cout << "Select Type: ";
+				std::cin >> choice;
+				i++;
+				break;
+			default:
+				std::cout << "Enter a new type: ";
+				std::cin.ignore();
+				std::getline(std::cin, etype);
+				employeeType.push_back(etype);
+			}
+		}
+	}
+};
+int Authority::i = rand() % 100;
+
+class JobSeeker {
+	int skill, qualification;
+public:
+	JobSeeker() :skill(0), qualification(0) {
+		std::cout << "\nSelect your Qualification.\n1. Graduate\n2. F.Sc\n3. Matric\n4. Diploma\n5. None\nEnter your Choice: ";
+		std::cin >> qualification;
+		eligibility();
+	}
+	void eligibility() {
+		switch (qualification) {
+		case 1:
+			std::cout << "Select your Degree type\n1. Bachelors\n2. Masters\nEnter your choice: ";
+			std::cin >> qualification;
+			switch (qualification) {
+			case 1:
+				std::cout << "Enter your Degree\n1. BS Accounting\n2. BS Finance\n3. BS Economic\n4. B.A";
+				std::cin >> qualification;
+				switch (qualification) {
+				case1:
+				case2:
+				case3:
+				case4:
+					std::cout << "Your interview is scheduled on " << rand() % 30 << " / " << rand() % 12 << " / " << 2024;
+					if (rand() %  2 == 1) { std::cout << "\nCongratulations! You're Hired as our new receptionist!"<<"\nYour Hourly salary is: $"<<rand()%20; }
+					else { std::cout << "\nYou've failed the interview. I'm afraid you'll have to apply somewhere else Sir."; }
+					break;
+				default:
+					std::cout << "\nInvalid Input!!!\n";
+					eligibility();
+				}
+				break;
+			case 2:
+				std::cout << "Enter your Degree\n1. ";
+				std::cin >> qualification;
+				break;
+			default:
+				std::cout << "\nInvalid Input!\n";
+				eligibility();
+			}
+			break;
+		case 2:
+			std::cout << "Enter your Qualification\n1. Pre Engineering\n2. ICS (Computer)\n3. ICS (Stats)\n4. None\nEnter your Choice: ";
+			std::cin >> qualification;
+			switch (qualification) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				std::cout << "\nYou're Ineligible\n";
+				break;
+			default:
+				std::cout << "\nInvalid Input!\n";
+				eligibility();
+			}
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			std::cout << "\nI'm afraid you're not eligible to apply for job at our bank.\n";
+			break;
+		default:
+			std::cout << "\nInvalid input.\n";
+			eligibility();
+		}
+	}
+	int getQualification() { return qualification; }
+	int getSkill() { return skill; }
+	~JobSeeker() {}
 };
 
 int main() {
@@ -358,13 +472,13 @@ int main() {
 			main();
 		}
 		break;
-	case 2:
-		Authority worker;
-		break;
-	case 3: {
-		jobSeeker job;
+	case 2: {
+		Authority auth;
+		auth.manageEmployees();
 		break;
 	}
+	case 3:
+		break;
 	default:
 		std::cout << "\nINVALID INPUT!";
 		main();
