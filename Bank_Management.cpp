@@ -350,21 +350,14 @@ public:
 			std::cin >> qualification;
 			switch (qualification) {
 			case 1:
-				std::cout << "Enter your Degree\n1. BS Accounting\n2. BS Finance\n3. BS Economic\n4. B.A";
+				std::cout << "Enter your Degree\n1. BS Accounting\n2. BS Finance\n3. BS Economic\n4. B.A\nEnter your choice: ";
 				std::cin >> qualification;
-				switch (qualification) {
-				case1:
-				case2:
-				case3:
-				case4:
+				if (qualification >=0 && qualification<=4) {
 					std::cout << "Your interview is scheduled on " << rand() % 30 << " / " << rand() % 12 << " / " << 2024;
-					if (rand() %  2 == 1) { std::cout << "\nCongratulations! You're Hired as our new receptionist!"<<"\nYour Hourly salary is: $"<<rand()%20; }
-					else { std::cout << "\nYou've failed the interview. I'm afraid you'll have to apply somewhere else Sir."; }
-					break;
-				default:
-					std::cout << "\nInvalid Input!!!\n";
-					eligibility();
+					if (rand() % 3 == 1) { std::cout << "\nCongratulations! You're Hired as our new receptionist!" << "\nYour Hourly salary is: $" << rand() % 20; }
+					else { std::cout << "\nYou've failed the interview. I'm afraid you'll have to apply somewhere else Sir.\n"; }
 				}
+				else { std::cout << "\nInvalid Input\n"; eligibility(); }
 				break;
 			case 2:
 				std::cout << "Enter your Degree\n1. ";
@@ -425,7 +418,7 @@ int main() {
 	Types();
 	std::cin >> choice;
 	switch (choice) {
-	case 1:
+	case 1: 
 		userMenu();
 		std::cin >> userChoice;
 		switch (userChoice) {
@@ -477,15 +470,17 @@ int main() {
 		auth.manageEmployees();
 		break;
 	}
-	case 3:
+	case 3: {
+		JobSeeker job;
 		break;
+	}
 	default:
 		std::cout << "\nINVALID INPUT!";
 		main();
 	}
-	std::cout << "\nApply for Job, Add/Withdraw money, Authorized?(y/Y): ";
-	std::cin >> tryAgain;
-	if (tryAgain == 'y' || tryAgain == 'Y') { main(); }
-	std::cout << "\nThanks for preferring our bank service, have a NICE day!\n";
-	return 0;
+		  std::cout << "\nApply for Job, Add/Withdraw money, Authorized?(y/Y): ";
+		  std::cin >> tryAgain;
+		  if (tryAgain == 'y' || tryAgain == 'Y') { main(); }
+		  std::cout << "\nThanks for preferring our bank service, have a NICE day!\n";
+		  return 0;
 }
