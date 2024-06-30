@@ -92,7 +92,7 @@ public:
 	std::string getDuration() { return duration; }
 	void displayLoan() {
 		std::cout << "\n*********************************************************************\n\n";
-		std::cout << "          ~Loan Info~\n\n" << "          Loan Amount by you : " << getLoanAmount() << std::endl << "          Chosen Duration : " << getDuration() << std::endl << std::endl;
+		std::cout << "          ~Loan Info~\n\n" << "          Loan Amount by you: " << getLoanAmount() << std::endl << "          Chosen Duration: " << getDuration() << std::endl << std::endl;
 		std::cout << "\n*********************************************************************\n";
 	}
 	~Loan() {}
@@ -100,12 +100,12 @@ public:
 
 class CustomerCare {
 private:
-	int choice, type, accNumber, ZIP;
+	int choice, type, accNumber, ZIP, draft;
 	char queryAgain;
 	double initialDeposit;
-	std::string password, name, CNIC, DOB, Email, phNo, Address, City, State;
+	std::string password, name, CNIC, DOB, Email, phNo, Address, City, State, cnic_2;
 public:
-	CustomerCare() : choice(0), queryAgain(NULL), type(0), initialDeposit(0), name(""), CNIC(""), accNumber(0), DOB(""), Email(""), phNo(""), password(""), ZIP(0), Address(""), City(""), State("") {
+	CustomerCare() : choice(0), queryAgain(NULL), type(0), draft(0), initialDeposit(0), name(""), CNIC(""), accNumber(0), DOB(""), Email(""), phNo(""), password(""), ZIP(0), Address(""), City(""), State(""), cnic_2("") {
 		do {
 			std::cout << "\n1. For Queries relating to any problem.\n";
 			std::cout << "2. For Opening a bank Account.\n";
@@ -218,12 +218,20 @@ public:
 	}
 	void OpenBank() {
 		std::cout << "Setting up things for you...\n";
-		std::cout << "\nSelect Type:\n1. Saving\n2. Joint\n3. Business\nEnter your Choice: ";
+		std::cout << "\nSelect Type:\n1. Current\n2. Joint\n3. Business\nEnter your Choice: ";
 		std::cin >> type;
 		std::cin.ignore();
 		std::cout << "\nEnter Name: ";
 		std::getline(std::cin, name);
 		bankDetails();
+		if (type == 2) {
+			std::cout << "Enter Partner's CNIC: ";
+			std::getline(std::cin, cnic_2);
+		}
+		if (type == 3) {
+			std::cout << "Enter Business Draft No: ";
+			std::cin >> draft;
+		}
 		std::cin.ignore();
 		std::cout << "Please set up a Password: ";
 		std::getline(std::cin, password);
@@ -232,10 +240,14 @@ public:
 			std::cin >> initialDeposit;
 			if (initialDeposit < 0) { std::cout << "\nEnter a valid Amount: \n"; }
 		} while (initialDeposit < 0);
+		
 		if (initialDeposit == 0) { std::cout << "Your Account is NOT activated as the initial deposit is $0.\nActivate your Account to get your Credit Card.\n"; }
 		else { std::cout << "Thank you for Opening your Bank Account.\nHere is your Credit Card Good Sir!\n"; }
 	}
 	void closeBank() {
+		std::cout << "Enter your Account Number: ";
+		std::cin >> accNumber;
+		std::cin.ignore();
 		std::cout << "\nYour Closing application is under process, Please wait...\nFor further verification, enter your current password: ";
 		std::getline(std::cin, password);
 		bankDetails();
@@ -246,10 +258,12 @@ public:
 	int getType() { return type; }
 	int getAccountNumber() { return accNumber; }
 	int getZIP() { return ZIP; }
+	int getDraft() { return draft; }
 	double getDeposit() { return initialDeposit; }
 	std::string getName() { return name; }
 	std::string getPassword() { return password; }
 	std::string getCNIC() { return CNIC; }
+	std::string getPartnerCnic() { return cnic_2; }
 	std::string getDateOfBirth() { return DOB; }
 	std::string getEmail() { return Email; }
 	std::string getPhone() { return phNo; }
@@ -277,7 +291,10 @@ void userMenu() {
 	std::cout << "Enter Your Choice: ";
 }
 class Authority{};
-class JobSeeker {};
+class jobSeeker {
+public:
+	jobSeeker() {}
+};
 
 int main() {
 	system("cls");
@@ -342,9 +359,12 @@ int main() {
 		}
 		break;
 	case 2:
+		Authority worker;
 		break;
-	case 3:
+	case 3: {
+		jobSeeker job;
 		break;
+	}
 	default:
 		std::cout << "\nINVALID INPUT!";
 		main();
