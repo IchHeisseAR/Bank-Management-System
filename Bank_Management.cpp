@@ -1,11 +1,10 @@
-
 #include <iostream>
 #include <string>
-#include <fstream>
 #include <iomanip>
 #include <cstdlib>
 #include <climits>
 #include <vector>
+#include <chrono>
 
 class Add {
 private:
@@ -280,65 +279,129 @@ void userMenu() {
 	std::cout << "Enter Your Choice: ";
 }
 class Authority {
-	int f, l, choice;
+protected:
+	static bool initialized, stringsInitialized;
+	static int k;
+	int choice;
 	char given;
 	static int i;
-	std::string fname, lname, etype;
-	std::vector <std::string> firstName = { "Umer","Abdullah","Muneeb","Ayesha","Zeeshan","Moiz","Zain","Khateeja","Tariq","Daniyal" };
-	std::vector <std::string> lastName = { "Javaid","Ahmad","Ijaz","Imtiaz","Khalil","-ul- Hassan","-ul- Arfeen","Yousaf","-ur- Rahman", "bin Abdur Rahman" };
-	std::vector <std::string> employeeType = { "Accountant","Janitor", "Security Guard", "Receptionist", "IT Engineer" };
+	std::string newF, newL, newE;
+	static std::vector<std::string> fname, lname, etype;
+	static const std::vector<std::string> firstName, lastName, employeeType;
+
 public:
-	Authority() :f(0), l(0), choice(0), fname(""), lname("") {
-		std::cout << "State your Type: \n1. HR\n2. Boss\3. Janitor\n4. Accountant\n5. Manager\nEnter your Choice: ";
+	Authority() : choice(0) {
+		if (!initialized) {
+			i = rand() % 100;
+			initialized = true;
+		}
+	}
+
+	void setAuthority() {
+		std::cout << "\nState your Type: \n1. HR\n2. Boss\n3. Janitor\n4. Accountant\n5. Manager\nEnter your Choice: ";
 		std::cin >> choice;
 	}
+
 	void manageEmployees() {
-		std::cout << "\nYou have " << i << " employees working in your bank at the moment: \n";
-		for (int j = 0; j < i; j++) { std::cout << j + 1 << ". " << firstName[rand() % firstName.size()] << " " << lastName[rand() % lastName.size()] << " (" << employeeType[rand() % employeeType.size()] << ") " << std::endl; }
-		if (firstName.size() > 10) { std::cout << fname << " " << lname << std::endl; }
-		std::cout << "\n1. Fire\n2. Hire\nEnter your Choice: ";
+		std::cout << "\nYou have " << i << " employees working in your bank at the moment\n";
+		if (!stringsInitialized) {
+			initializeEmployees();
+			stringsInitialized = true;
+		}
+		for (int l = 0; l < fname.size(); l++) {
+			if (!fname[l].empty()) { std::cout << l + 1 << ". " << fname[l] << " " << lname[l] << " (" << etype[l % etype.size()] << ")" << std::endl; }
+			else { continue; }
+		}
+		std::cout << "\n1.Fire\n2.Hire\nEnter your Choice: ";
 		std::cin >> choice;
 		switch (choice) {
 		case 1:
-			std::cout << "Enter Employee Number from the Given List: ";
-			std::cin >> choice;
-			if (choice >= 0 && choice <= i) {
-			}
-			else { std::cout << "\nInvalid Choice!\n"; }
+			fireEmployee();
 			break;
 		case 2:
-			std::cout << "Enter First name of the new Employee: ";
-			std::cin.ignore();
-			std::getline(std::cin,fname);
-			std::cout << "Enter Last Name: ";
-			std::getline(std::cin, lname);
-			firstName.push_back(fname);
-			lastName.push_back(lname);
-			for (int j = 0; j < employeeType.size(); j++) { std::cout << j + 1 << ". " << employeeType[j] << std::endl; }
-			std::cout << "\nIs he from the one of the given types?(y/Y): ";
-			std::cin >> given;
-			switch (given) {
-			case 'y':
-			case 'Y':
-				std::cout << "Select Type: ";
-				std::cin >> choice;
-				i++;
-				break;
-			default:
-				std::cout << "Enter a new type: ";
-				std::cin.ignore();
-				std::getline(std::cin, etype);
-				employeeType.push_back(etype);
+			hireEmployee();
+			break;
+		default:
+			std::cout << "\nInvalid Input!\n";
+			manageEmployees();
+		}
+	}
+	void fireEmployee() {
+		std::cout << "Enter Employee Number from the Given List: ";
+		std::cin >> choice;
+		if (choice > 0 && choice <= fname.size()) {
+			std::cout << "\nMr. " << fname[choice - 1] << " " << lname[choice - 1] << " (" << etype[choice - 1] << ") has been Fired!\n";
+			fname.erase(fname.begin() + choice - 1);
+			lname.erase(lname.begin() + choice - 1);
+			etype.erase(etype.begin() + choice - 1);
+			i--;
+		}
+		else {
+			std::cout << "\nInvalid Choice!\n";
+			fireEmployee();
+		}
+	}
+	void hireEmployee() {
+		std::cout << "Enter First name of the new Employee: ";
+		std::cin.ignore();
+		std::getline(std::cin, newF);
+		std::cout << "Enter Last Name: ";
+		std::getline(std::cin, newL);
+		fname.push_back(newF);
+		lname.push_back(newL);
+		i++;
+		for (int j = 0; j < employeeType.size(); j++) {
+			std::cout << j + 1 << ". " << employeeType[j] << std::endl;
+		}
+		std::cout << "\nIs he from one of the given types? (y/Y): ";
+		std::cin >> given;
+		switch (given) {
+		case 'y':
+		case 'Y':
+			std::cout << "Select Type: ";
+			std::cin >> choice;
+			if (choice > 0 && choice <= employeeType.size()) {
+				etype.push_back(employeeType[choice - 1]);
 			}
+			else {
+				std::cout << "\nInvalid Choice!\n";
+			}
+			break;
+		default:
+			std::cout << "Enter a new type: ";
+			std::cin.ignore();
+			std::getline(std::cin, newE);
+			etype.push_back(newE);
+		}
+	}
+	void initializeEmployees() {
+		for (int j = 0; j < i; j++) {
+			fname.push_back(firstName[rand() % firstName.size()]);
+			lname.push_back(lastName[rand() % lastName.size()]);
+			etype.push_back(employeeType[rand() % employeeType.size()]);
 		}
 	}
 };
+std::vector<std::string>Authority::fname;
+std::vector<std::string>Authority::lname;
+std::vector<std::string>Authority::etype;
+const std::vector<std::string> Authority::firstName = { "Umer","Abdullah","Muneeb","Ayesha","Zeeshan","Moiz","Zain","Khateeja","Tariq","Daniyal" };
+const std::vector<std::string> Authority::lastName = { "Javaid","Ahmad","Ijaz","Imtiaz","Khalil","-ul- Hassan","-ul- Arfeen","Yousaf","-ur- Rahman", "bin Abdur Rahman" };
+const std::vector<std::string> Authority::employeeType = { "Accountant","Janitor", "Security Guard", "Receptionist", "IT Engineer" };
+bool Authority::stringsInitialized = false;
+bool Authority::initialized = false;
 int Authority::i = rand() % 100;
+int Authority::k = 0;
 
-class JobSeeker {
+class JobSeeker : protected Authority {
 	int skill, qualification;
 public:
 	JobSeeker() :skill(0), qualification(0) {
+		std::cout << "Enter First Name: ";
+		std::cin.ignore();
+		std::getline(std::cin, newF);
+		std::cout << "Enter Last Name: ";
+		std::getline(std::cin, newL);
 		std::cout << "\nSelect your Qualification.\n1. Graduate\n2. F.Sc\n3. Matric\n4. Diploma\n5. None\nEnter your Choice: ";
 		std::cin >> qualification;
 		eligibility();
@@ -352,9 +415,14 @@ public:
 			case 1:
 				std::cout << "Enter your Degree\n1. BS Accounting\n2. BS Finance\n3. BS Economic\n4. B.A\nEnter your choice: ";
 				std::cin >> qualification;
-				if (qualification >=0 && qualification<=4) {
-					std::cout << "Your interview is scheduled on " << rand() % 30 << " / " << rand() % 12 << " / " << 2024;
-					if (rand() % 3 == 1) { std::cout << "\nCongratulations! You're Hired as our new receptionist!" << "\nYour Hourly salary is: $" << rand() % 20; }
+				if (qualification >= 0 && qualification <= 4) {
+					std::cout << "Your interview is scheduled on " << rand() % 30 << " / " << rand() % 12 << " / " << 2024 << " at " << rand() % 9 << " : " << (rand() % 50) + 10 << " AM";
+					if (rand() % 3 == 1) {
+						std::cout << "\nCongratulations! You're Hired as our new receptionist!" << "\nYour Hourly salary is: $" << rand() % 20;
+						fname.push_back(newF);
+						lname.push_back(newL);
+						i++;
+					}
 					else { std::cout << "\nYou've failed the interview. I'm afraid you'll have to apply somewhere else Sir.\n"; }
 				}
 				else { std::cout << "\nInvalid Input\n"; eligibility(); }
@@ -406,6 +474,7 @@ public:
 int main() {
 	system("cls");
 	system("COLOR E4");
+	srand(time(NULL));
 	std::cout << "\n\n                                 *********************************************\n";
 	std::cout << "                                 *                                           *\n";
 	std::cout << "                                 *        ~ Welcome to A U Z A Bank ~        *\n";
@@ -414,11 +483,10 @@ int main() {
 
 	int choice, userChoice, authChoice, jobChoice;
 	char tryAgain = 'y', receipt, choiceNew;
-	srand(time(NULL));
 	Types();
 	std::cin >> choice;
 	switch (choice) {
-	case 1: 
+	case 1:
 		userMenu();
 		std::cin >> userChoice;
 		switch (userChoice) {
@@ -466,7 +534,9 @@ int main() {
 		}
 		break;
 	case 2: {
+		srand(time(NULL));
 		Authority auth;
+		auth.setAuthority();
 		auth.manageEmployees();
 		break;
 	}
@@ -478,9 +548,9 @@ int main() {
 		std::cout << "\nINVALID INPUT!";
 		main();
 	}
-		  std::cout << "\nApply for Job, Add/Withdraw money, Authorized?(y/Y): ";
-		  std::cin >> tryAgain;
-		  if (tryAgain == 'y' || tryAgain == 'Y') { main(); }
-		  std::cout << "\nThanks for preferring our bank service, have a NICE day!\n";
-		  return 0;
+	std::cout << "\nApply for Job, Add/Withdraw money, Authorized?(y/Y): ";
+	std::cin >> tryAgain;
+	if (tryAgain == 'y' || tryAgain == 'Y') { main(); }
+	std::cout << "\nThanks for preferring our bank service, have a NICE day!\n";
+	return 0;
 }
