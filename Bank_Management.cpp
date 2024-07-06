@@ -2,9 +2,7 @@
 #include <string>
 #include <iomanip>
 #include <cstdlib>
-#include <climits>
 #include <vector>
-#include <chrono>
 
 class Add {
 private:
@@ -12,7 +10,7 @@ private:
 protected:
 	std::string accountNumber;
 	int CVC, SecurityPin;
-	static long float currentAmount;
+	static double currentAmount;
 public:
 	Add() : accountNumber(""), CVC(0), SecurityPin(0), addAmount(0), totalAdd(0) {}
 	void Details() {
@@ -45,12 +43,12 @@ public:
 	double getAddedAmount() { return currentAmount += addAmount; }
 	virtual void Receipt() {
 		std::cout << "\n*********************************************************************\n";
-		std::cout << "\n          ~Here is your Receipt~ \n\n" << "          Account Number: " << getAccountNumber() << std::endl << "          Amount Added: " << std::setprecision(2) << getAmount() << std::endl << "          Your current Amount is now: " << getCurrentAmount() << std::endl;
+		std::cout << "\n          ~Here is your Receipt~ \n\n" << "          Account Number: " << getAccountNumber() << std::endl << "          Amount Added: " << getAmount() << std::endl << "          Your current Amount is now: " << getCurrentAmount() << std::endl;
 		std::cout << "\n*********************************************************************\n";
 	}
 	~Add() {}
 };
-long float Add::currentAmount = rand() % 99999;
+double Add::currentAmount = rand() % 99999;
 class Withdraw : protected Add {
 private:
 	double withdrawalAmount, totalWithdraw;
@@ -71,7 +69,7 @@ public:
 	double getWithdrawnAmount() { return currentAmount; }
 	void Receipt() {
 		std::cout << "\n*********************************************************************\n";
-		std::cout << "          ~Here is your Receipt~ \n\n" << "          Account Number: " << getAccountNumber() << std::endl << "          Amount Withdrawn: " << std::setprecision(2) << getWithdraw() << std::endl << "          Your current amount is now: " << getWithdrawnAmount() << std::endl;
+		std::cout << "          ~Here is your Receipt~ \n\n" << "          Account Number: " << getAccountNumber() << std::endl << "          Amount Withdrawn: " << getWithdraw() << std::endl << "          Your current amount is now: " << getWithdrawnAmount() << std::endl;
 		std::cout << "\n*********************************************************************\n";
 	}
 	~Withdraw() {}
@@ -106,7 +104,7 @@ private:
 	double initialDeposit;
 	std::string password, name, CNIC, DOB, Email, phNo, Address, City, State;
 public:
-	CustomerCare() : choice(0), queryAgain(NULL), type(0), initialDeposit(0), name(""), CNIC(""), accNumber(0), DOB(""), Email(""), phNo(""), password(""), ZIP(0), Address(""), City(""), State("") {
+	CustomerCare() : choice(0), queryAgain('y'), type(0), initialDeposit(0), name(""), CNIC(""), accNumber(0), DOB(""), Email(""), phNo(""), password(""), ZIP(0), Address(""), City(""), State("") {
 		do {
 			std::cout << "\n1. For Queries relating to any problem.\n";
 			std::cout << "2. For Opening a bank Account.\n";
@@ -281,6 +279,7 @@ void userMenu() {
 class Authority {
 protected:
 	static bool initialized, stringsInitialized;
+	int attend = rand() % 99;
 	static int k;
 	int choice;
 	char given;
@@ -300,8 +299,14 @@ public:
 	void setAuthority() {
 		std::cout << "\nState your Type: \n1. HR\n2. Boss\n3. Janitor\n4. Accountant\n5. Manager\nEnter your Choice: ";
 		std::cin >> choice;
+		if (choice == 1 || choice == 2) { manageEmployees(); }
+		else if (choice >= 3 && choice <= 5) { attendance(); }
+		else { std::cout << "\nInvalid Input\n"; setAuthority(); }
 	}
-
+	void attendance() {
+		std::cout << "Welcome Mr. " << firstName[rand() % firstName.size()] << " " << lastName[rand() % lastName.size()] << "\nYour Attendance is: " << attend << "." << rand() % 99;
+		if (attend < 80) { std::cout << "\nYour Attendance is low! Please keep up.\n"; }
+	}
 	void manageEmployees() {
 		std::cout << "\nYou have " << i << " employees working in your bank at the moment\n";
 		if (!stringsInitialized) {
@@ -350,11 +355,12 @@ public:
 		fname.push_back(newF);
 		lname.push_back(newL);
 		i++;
-		for (int j = 0; j < employeeType.size(); j++) {
-			std::cout << j + 1 << ". " << employeeType[j] << std::endl;
-		}
+		for (int j = 0; j < employeeType.size(); j++) { std::cout << j + 1 << ". " << employeeType[j] << std::endl; }
 		std::cout << "\nIs he from one of the given types? (y/Y): ";
 		std::cin >> given;
+		jobTypes();
+	}
+	void jobTypes() {
 		switch (given) {
 		case 'y':
 		case 'Y':
@@ -402,25 +408,32 @@ public:
 		std::getline(std::cin, newF);
 		std::cout << "Enter Last Name: ";
 		std::getline(std::cin, newL);
-		std::cout << "\nSelect your Qualification.\n1. Graduate\n2. F.Sc\n3. Matric\n4. Diploma\n5. None\nEnter your Choice: ";
+
+		std::cout << "\nSelect your Qualification.\n1. Graduate\n2. F.Sc\n3. None\nEnter your Choice: ";
 		std::cin >> qualification;
 		eligibility();
 	}
 	void eligibility() {
 		switch (qualification) {
 		case 1:
-			std::cout << "Select your Degree type\n1. Bachelors\n2. Masters\nEnter your choice: ";
+			std::cout << "\nSelect your Degree type\n1. Bachelors\n2. Masters\nEnter your choice: ";
 			std::cin >> qualification;
 			switch (qualification) {
 			case 1:
-				std::cout << "Enter your Degree\n1. BS Accounting\n2. BS Finance\n3. BS Economic\n4. B.A\nEnter your choice: ";
+				std::cout << "Enter your Degree\n1. BS Accounting\n2. BS Finance\n3. BS Economics\n4. B.A\nEnter your choice: ";
 				std::cin >> qualification;
-				if (qualification >= 0 && qualification <= 4) {
+				if (qualification > 0 && qualification <= 4) {
+					for (int j = 0; j < employeeType.size(); j++) { std::cout << j + 1 << ". " << employeeType[j] << std::endl; }
+					std::cout << "\nIs your preferred job title from one of the given? (y/Y): ";
+					std::cin >> given;
+					jobTypes();
 					std::cout << "Your interview is scheduled on " << rand() % 30 << " / " << rand() % 12 << " / " << 2024 << " at " << rand() % 9 << " : " << (rand() % 50) + 10 << " AM";
+					std::cout << "\n\t\t*After interview...*\n";
 					if (rand() % 3 == 1) {
 						std::cout << "\nCongratulations! You're Hired as our new receptionist!" << "\nYour Hourly salary is: $" << rand() % 20;
 						fname.push_back(newF);
 						lname.push_back(newL);
+						etype.push_back(newE);
 						i++;
 					}
 					else { std::cout << "\nYou've failed the interview. I'm afraid you'll have to apply somewhere else Sir.\n"; }
@@ -428,8 +441,25 @@ public:
 				else { std::cout << "\nInvalid Input\n"; eligibility(); }
 				break;
 			case 2:
-				std::cout << "Enter your Degree\n1. ";
+				std::cout << "\nEnter your Degree\n1. MS Accounting\n2. MS Finance\n3. MS Economics\n4. MS M.A\nEnter your Choice ";
 				std::cin >> qualification;
+				std::cout << std::endl;
+				if (qualification > 0 and qualification <= 4) {
+					for (int j = 0; j < employeeType.size(); j++) { std::cout << j + 1 << ". " << employeeType[j] << std::endl; }
+					std::cout << "Is your preferred job title from one of the given? (y/Y): ";
+					std::cin >> given;
+					jobTypes();
+					std::cout << "Your interview is scheduled on " << rand() % 30 << " / " << rand() % 12 << " / " << 2024 << " at " << rand() % 9 << " : " << (rand() % 50) + 10 << " AM";
+					std::cout << "\n\t\t*After interview...*\n";
+					if (rand() % 4 == 1) {
+						std::cout << "Congratulations, You're now hired as our new " << etype[i] << "! Your Hourly Salary is: $" << rand() % 30;
+						fname.push_back(newF);
+						lname.push_back(newL);
+						etype.push_back(newE);
+						i++;
+					}
+					else { std::cout << "\nYou've failed the interview. I'm afraid you'll have to apply somewhere else Sir.\n"; }
+				}
 				break;
 			default:
 				std::cout << "\nInvalid Input!\n";
@@ -441,13 +471,16 @@ public:
 			std::cin >> qualification;
 			switch (qualification) {
 			case 1:
-				break;
-			case 2:
-				break;
-			case 3:
-				break;
-			case 4:
-				std::cout << "\nYou're Ineligible\n";
+				std::cout << "Your interview is scheduled on " << rand() % 30 << " / " << rand() % 12 << " / " << 2024 << " at " << rand() % 9 << " : " << (rand() % 50) + 10 << " AM";
+				std::cout << "\n\t\t*After interview...*\n";
+				if (rand() % 4 == 1) {
+					std::cout << "Congratulations, You're now hired as our new Accountant! Your Hourly Salary is: $" << rand() % 15;
+					fname.push_back(newF);
+					lname.push_back(newL);
+					etype.push_back("Accountant");
+					i++;
+				}
+				else { std::cout << "\nYou've failed the interview. I'm afraid you'll have to apply somewhere else Sir.\n"; }
 				break;
 			default:
 				std::cout << "\nInvalid Input!\n";
@@ -455,10 +488,6 @@ public:
 			}
 			break;
 		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
 			std::cout << "\nI'm afraid you're not eligible to apply for job at our bank.\n";
 			break;
 		default:
@@ -529,15 +558,14 @@ int main() {
 			break;
 		}
 		default:
-			std::cout << "\nINVALID INPUT!";
 			main();
+			std::cout << "\nINVALID INPUT!";
 		}
 		break;
 	case 2: {
 		srand(time(NULL));
 		Authority auth;
 		auth.setAuthority();
-		auth.manageEmployees();
 		break;
 	}
 	case 3: {
